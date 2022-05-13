@@ -19,6 +19,7 @@ public class UserDtoConverter {
                     .address(userDTO.getAddress())
                     .email(userDTO.getEmail())
                     .role(RoleDtoConverter.dtoRoleListToRole(userDTO.getRole()))
+                    .deviceId(userDTO.getDeviceId())
                     .build();
         } else {
             throw new UnknownException(String.format("Unknown : %s entity\n", userDTO.getClass().getName()));
@@ -35,6 +36,7 @@ public class UserDtoConverter {
                     .address(user.getAddress())
                     .email(user.getEmail())
                     .role(RoleDtoConverter.roleListToRoleDto(user.getRole()))
+                    .deviceId(user.getDeviceId())
                     .build();
         } else {
             throw new UnknownException(String.format("Unknown : %s entity\n", user.getClass().getName()));

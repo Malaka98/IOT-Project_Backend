@@ -54,4 +54,10 @@ public class User {
             )
     )
     private Collection<Role> role = new ArrayList<>();
+
+    @Column(
+            nullable = false,
+            unique = true
+    )
+    private String deviceId;
 }

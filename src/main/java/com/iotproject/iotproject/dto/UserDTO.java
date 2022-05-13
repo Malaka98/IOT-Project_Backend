@@ -21,4 +21,5 @@ public class UserDTO {
     private String email;
     private String address;
     private Collection<RoleDTO> role;
+    private String deviceId;
 }
