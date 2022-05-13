@@ -23,10 +23,10 @@ public class DeviceDataService implements IDeviceDataService {
     public String saveDeviceData(DeviceDataDTO deviceDataDTO) {
         try {
 
-            String response = "0";
+            String response = "1";
 
             if (deviceDataDTO.getValue3().equals("1") || deviceDataDTO.getValue4().equals("1")) {
-                response = "1";
+                response = "0";
                 Device device = iDeviceRepository.findByDeviceId(deviceDataDTO.getApiKey());
                 device.setAdminOnOff(true);
                 device.setUserOnOff(true);
@@ -35,7 +35,7 @@ public class DeviceDataService implements IDeviceDataService {
             Device device = iDeviceRepository.findByDeviceId(deviceDataDTO.getApiKey());
 
             if (device.isAdminOnOff()) {
-                response = "1";
+                response = "0";
             }
 
             iDeviceDataRepository.save(DeviceData.builder()
