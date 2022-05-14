@@ -20,7 +20,7 @@ public class DeviceData {
     @Column(
             nullable = false
     )
-    private String value1;
+    private float value1;
 
     @Column(
             nullable = false

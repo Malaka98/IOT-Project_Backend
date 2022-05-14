@@ -39,7 +39,7 @@ public class DeviceDataService implements IDeviceDataService {
             }
 
             iDeviceDataRepository.save(DeviceData.builder()
-                    .value1(deviceDataDTO.getValue1())
+                    .value1(Float.parseFloat(deviceDataDTO.getValue1()))
                     .value2(deviceDataDTO.getValue2())
                     .value3(deviceDataDTO.getValue3())
                     .value4(deviceDataDTO.getValue4())
