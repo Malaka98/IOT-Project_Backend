@@ -1,5 +1,7 @@
 package com.iotproject.iotproject.service;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.iotproject.iotproject.dto.ResponseUserDTO;
 import com.iotproject.iotproject.dto.RoleDTO;
 import com.iotproject.iotproject.dto.UserDTO;
@@ -19,7 +21,7 @@ public interface IUserService {
 
     void addRoleToUser(String userName, String roleName);
 
-    List<UserDTO> getAllUsers();
+    JsonArray getAllUsers();
 
     User deleteUser(String userName);
 

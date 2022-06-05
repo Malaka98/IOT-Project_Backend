@@ -28,13 +28,13 @@ public class DeviceDataService implements IDeviceDataService {
             if (deviceDataDTO.getValue3().equals("1") || deviceDataDTO.getValue4().equals("1")) {
                 response = "0";
                 Device device = iDeviceRepository.findByDeviceId(deviceDataDTO.getApiKey());
-                device.setAdminOnOff(true);
-                device.setUserOnOff(true);
+                device.setAdminOnOff(false);
+                device.setUserOnOff(false);
                 iDeviceRepository.save(device);
             }
             Device device = iDeviceRepository.findByDeviceId(deviceDataDTO.getApiKey());
 
-            if (device.isAdminOnOff()) {
+            if (!device.isAdminOnOff()) {
                 response = "0";
             }
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,6 +34,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
+
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 

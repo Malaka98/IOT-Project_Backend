@@ -1,14 +1,17 @@
 package com.iotproject.iotproject.service.impl;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.iotproject.iotproject.dto.ResponseUserDTO;
 import com.iotproject.iotproject.dto.RoleDTO;
 import com.iotproject.iotproject.dto.UserDTO;
+import com.iotproject.iotproject.entity.Device;
 import com.iotproject.iotproject.entity.Role;
 import com.iotproject.iotproject.entity.User;
 import com.iotproject.iotproject.exception.BadRequestException;
 import com.iotproject.iotproject.exception.NotFoundException;
-import com.iotproject.iotproject.exception.UnknownException;
+import com.iotproject.iotproject.repository.IDeviceRepository;
 import com.iotproject.iotproject.repository.IRoleRepository;
 import com.iotproject.iotproject.repository.IUserRepository;
 import com.iotproject.iotproject.security.CustomUserDetails;
@@ -36,6 +39,8 @@ public class UserService implements IUserService, UserDetailsService {
     private final IRoleRepository roleRepository;
     private final IUserRepository iUserRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final IDeviceRepository iDeviceRepository;
 
 
     @Override
@@ -117,10 +122,29 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public JsonArray getAllUsers() {
 
         try {
-            return UserDtoConverter.userDTOListToUserList(iUserRepository.findAll());
+            JsonArray userList = new JsonArray();
+
+
+            List<UserDTO> userDTOS = UserDtoConverter.userDTOListToUserList(iUserRepository.findAll());
+
+            userDTOS.forEach(userDTO -> {
+                JsonObject jsonObject = new JsonObject();
+                Device device = iDeviceRepository.findByDeviceId(userDTO.getDeviceId());
+
+                jsonObject.addProperty("name", userDTO.getName());
+                jsonObject.addProperty("username", userDTO.getUsername());
+                jsonObject.addProperty("email", userDTO.getEmail());
+                jsonObject.addProperty("address", userDTO.getAddress());
+                jsonObject.addProperty("deviceId", userDTO.getDeviceId());
+                jsonObject.addProperty("status", device.isUserOnOff() ? "Off" : "ON");
+
+                userList.add(jsonObject);
+            });
+
+            return userList;
         } catch (Exception ex) {
             throw new BadRequestException(ex.getMessage() + " ⚠⚠⚠");
         }
