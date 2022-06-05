@@ -28,4 +28,16 @@ public class ReportService implements IReportService {
             throw new UnknownException(e.getMessage());
         }
     }
+
+    @Override
+    public float getTotalUnit(String deviceId) {
+
+        try {
+            Device device = iDeviceRepository.findByDeviceId(deviceId);
+
+            return iDeviceDataRepository.getTotalValue1ByDaviceId(device);
+        } catch (Exception e) {
+            throw new UnknownException(e.getMessage());
+        }
+    }
 }

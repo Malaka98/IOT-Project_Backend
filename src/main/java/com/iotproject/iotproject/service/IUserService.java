@@ -26,4 +26,6 @@ public interface IUserService {
     User deleteUser(String userName);
 
     void updateUser(String UserName, ResponseUserDTO userDTO);
+
+    UserDTO getUserByDeviceId(String deviceId);
 }

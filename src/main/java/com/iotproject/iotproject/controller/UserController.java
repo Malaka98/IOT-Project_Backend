@@ -1,6 +1,5 @@
 package com.iotproject.iotproject.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.iotproject.iotproject.dto.ResponseUserDTO;
 import com.iotproject.iotproject.dto.RoleDTO;
@@ -16,14 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -36,6 +30,12 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
 
         return ResponseEntity.ok().body(userService.getAllUsers());
+    }
+
+    @GetMapping("/user/{deviceId}")
+    public ResponseEntity<?> getAllUserByDeviceId(@PathVariable String deviceId) {
+
+        return ResponseEntity.ok().body(userService.getUserByDeviceId(deviceId));
     }
 
     @PostMapping("/validate")

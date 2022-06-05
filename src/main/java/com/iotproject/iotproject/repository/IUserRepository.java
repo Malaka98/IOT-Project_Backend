@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IUserRepository extends JpaRepository<User, Long> {
     User findUserByUsername(String userName);
+    User findUserByDeviceId(String deviceId);
 
     @Query(
             "SELECT COUNT(u)  FROM User u"

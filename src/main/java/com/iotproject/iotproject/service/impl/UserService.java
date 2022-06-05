@@ -142,7 +142,7 @@ public class UserService implements IUserService, UserDetailsService {
                 jsonObject.addProperty("email", userDTO.getEmail());
                 jsonObject.addProperty("address", userDTO.getAddress());
                 jsonObject.addProperty("deviceId", userDTO.getDeviceId());
-                jsonObject.addProperty("status", device.isUserOnOff() ? "Off" : "ON");
+                jsonObject.addProperty("status", device.isUserOnOff() ? "ON" : "OFF");
 
                 userList.add(jsonObject);
             });
@@ -186,5 +186,11 @@ public class UserService implements IUserService, UserDetailsService {
         } catch (Exception ex) {
             throw new BadRequestException(ex.getMessage() + " ⚠⚠⚠");
         }
+    }
+
+    @Override
+    public UserDTO getUserByDeviceId(String deviceId) {
+
+        return UserDtoConverter.userToUserDTO(iUserRepository.findUserByDeviceId(deviceId));
     }
 }
