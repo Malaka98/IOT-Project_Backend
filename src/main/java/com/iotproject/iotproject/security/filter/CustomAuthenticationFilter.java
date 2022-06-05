@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iotproject.iotproject.dto.LoginDTO;
-import com.iotproject.iotproject.exception.UnknownException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -51,16 +51,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 
         UserDetails user = (UserDetails) authResult.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-
+        List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 40 * 60 * 1000))
                 .withIssuer(request.getRequestURI())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("roles", roles)
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
@@ -69,19 +69,25 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURI())
                 .sign(algorithm);
 
+        Map<String, List<String>> responseBody = new HashMap<>();
         Cookie jwtAccessTokenCookie = new Cookie("access_token", access_token);
         Cookie jwtRefreshTokenCookie = new Cookie("refresh_token", refresh_token);
 
+        responseBody.put("user_role", roles);
+//        tokens.put("refresh_token", refresh_token);
         jwtAccessTokenCookie.setMaxAge(86400);
+////        jwtAccessTokenCookie.setSecure(true);
         jwtAccessTokenCookie.setHttpOnly(true);
         jwtAccessTokenCookie.setPath("/");
-
+//
         jwtRefreshTokenCookie.setMaxAge(86400);
+////        jwtRefreshTokenCookie.setSecure(true);
         jwtRefreshTokenCookie.setHttpOnly(true);
         jwtRefreshTokenCookie.setPath("/");
         response.setContentType(APPLICATION_JSON_VALUE);
         response.addCookie(jwtAccessTokenCookie);
         response.addCookie(jwtRefreshTokenCookie);
+        new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
     }
 
     @Override

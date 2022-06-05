@@ -1,6 +1,7 @@
 package com.iotproject.iotproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import com.iotproject.iotproject.dto.ResponseUserDTO;
 import com.iotproject.iotproject.dto.RoleDTO;
 import com.iotproject.iotproject.dto.UserDTO;
@@ -9,6 +10,7 @@ import com.iotproject.iotproject.service.impl.UserService;
 import com.iotproject.iotproject.util.DtoConverter.RoleDtoConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -34,11 +36,24 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
-    @GetMapping("/validate")
-    public void validateUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map<String, String> res = new HashMap<>();
-        res.put("User", (String) request.getSession().getAttribute("USER_NAME"));
-        new ObjectMapper().writeValue(response.getOutputStream(), res);
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateUser(HttpServletRequest request) {
+
+        JsonObject response = new JsonObject();
+        response.addProperty("user", (String) request.getSession().getAttribute("USER_NAME"));
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE))
+                .body(response);
+    }
+
+    @PostMapping("/validate_dashboard")
+    public ResponseEntity<?> validateDashboard(HttpServletRequest request) {
+
+        JsonObject response = new JsonObject();
+        response.addProperty("user", (String) request.getSession().getAttribute("USER_NAME"));
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE))
+                .body(response);
     }
 
     @PostMapping("/user")
