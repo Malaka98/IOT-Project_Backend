@@ -91,12 +91,15 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDTO saveUser(UserDTO userDTO) {
 
         try {
             userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             User user = iUserRepository.save(UserDtoConverter.dtoToUser(userDTO));
-
+            iDeviceRepository.save(Device.builder()
+                    .deviceId(user.getDeviceId())
+                    .build());
             return UserDtoConverter.userToUserDTO(user);
         } catch (Exception ex) {
             throw new BadRequestException(ex.getMessage() + " ⚠⚠⚠");

@@ -29,17 +29,17 @@ public class DeviceController {
     @GetMapping("/get_data")
     public ResponseEntity<?> getDataToDevice(@RequestParam("deviceId") String deviceId) {
         log.info("===================>>>>>>>>>>>>>>************ " + deviceId);
-        return ResponseEntity.ok().body("1");
+        return ResponseEntity.ok().body(deviceService.ChackStatus(deviceId));
     }
 
-    @PostMapping("/device_on/{deviceId}")
+    @GetMapping("/device_on/{deviceId}")
     public ResponseEntity<?> deviceOn(@PathVariable String deviceId, HttpServletRequest request) {
         String userName = (String) request.getSession().getAttribute("USER_NAME");
 
         return ResponseEntity.ok().body(deviceService.deviceOn(deviceId, userName));
     }
 
-    @PostMapping("/device_off/{deviceId}")
+    @GetMapping("/device_off/{deviceId}")
     public ResponseEntity<?> deviceOff(@PathVariable String deviceId, HttpServletRequest request) {
         String userName = (String) request.getSession().getAttribute("USER_NAME");
 

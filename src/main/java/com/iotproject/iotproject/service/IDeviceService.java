@@ -8,4 +8,6 @@ public interface IDeviceService {
     String deviceOn(String deviceId, String username);
     String deviceOff(String deviceId, String username);
     String deviceStatus(String deviceId);
+
+    String ChackStatus(String deviceId);
 }

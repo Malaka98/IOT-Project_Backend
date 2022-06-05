@@ -35,7 +35,7 @@ public class DeviceService implements IDeviceService {
         Device device = iDeviceRepository.findByDeviceId(deviceId);
 
         if (user.getRole().contains(role)) {
-
+            device.setUserOnOff(true);
             device.setAdminOnOff(true);
         } else {
             device.setUserOnOff(true);
@@ -66,5 +66,19 @@ public class DeviceService implements IDeviceService {
     @Override
     public String deviceStatus(String deviceId) {
         return null;
+    }
+
+    @Override
+    public String ChackStatus(String deviceId) {
+
+        String deviceStatus = "1";
+
+        Device device = iDeviceRepository.findByDeviceId(deviceId);
+
+        if (!device.isUserOnOff() || !device.isAdminOnOff()) {
+            deviceStatus = "0";
+        }
+
+        return deviceStatus;
     }
 }
